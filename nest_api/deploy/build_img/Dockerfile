@@ -37,7 +37,8 @@ RUN mkdir -p /root/logs
 # Exponer puerto
 EXPOSE 3001
 
-# Health check
+
+# Health check (nc ya viene en Alpine)
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
   CMD nc -z localhost 3001 || exit 1
 
