@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pokemon-configmap
+  namespace: proyecto-nest
+data:
+  DB_HOST: postgres-pokemon-service
+  DB_PORT: "5432"
+  DATABASE: pokemondb
+  NODE_ENV: production
+  PORT: "3001"

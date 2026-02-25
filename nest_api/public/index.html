@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NestASIR - Películas & Pokémon</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">
+            <h1>NestASIR</h1>
+        </div>
+        <div class="nav-tabs">
+            <button class="nav-tab active" data-tab="peliculas" onclick="switchTab('peliculas')">
+                Películas
+            </button>
+            <button class="nav-tab" data-tab="pokemon" onclick="switchTab('pokemon')">
+                Pokémon
+            </button>
+        </div>
+    </nav>
+
+    <!-- PELÍCULAS -->
+    <section id="peliculas-section" class="section active">
+        <div class="filters-bar">
+            <h2>Películas</h2>
+            <div class="filters">
+                <div class="filter-group">
+                    <label>Buscar por título</label>
+                    <input type="text" id="filter-titulo" placeholder="Ej: Matrix..." oninput="filterPeliculas()">
+                </div>
+                <div class="filter-group">
+                    <label>Desde</label>
+                    <input type="date" id="filter-fecha-desde" onchange="filterPeliculasFecha()">
+                </div>
+                <div class="filter-group">
+                    <label>Hasta</label>
+                    <input type="date" id="filter-fecha-hasta" onchange="filterPeliculasFecha()">
+                </div>
+                <button class="btn-reset" onclick="resetPeliculas()">Reset</button>
+            </div>
+        </div>
+        <div class="results-count" id="peliculas-count"></div>
+        <div class="cards-grid" id="peliculas-grid"></div>
+    </section>
+
+    <!-- POKÉMON -->
+    <section id="pokemon-section" class="section">
+        <div class="filters-bar">
+            <h2>Pokémon</h2>
+            <div class="filters">
+                <div class="filter-group">
+                    <label>Buscar por nombre</label>
+                    <input type="text" id="filter-nombre" placeholder="Ej: Pikachu..." oninput="filterPokemonNombre()">
+                </div>
+                <div class="filter-group">
+                    <label>Tipo</label>
+                    <select id="filter-tipo" onchange="filterPokemonTipo()">
+                        <option value="">Todos</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>HP mayor que</label>
+                    <input type="number" id="filter-hp" placeholder="Ej: 80" oninput="filterPokemonHp()">
+                </div>
+                <button class="btn-reset" onclick="resetPokemon()">Reset</button>
+            </div>
+        </div>
+        <div class="results-count" id="pokemon-count"></div>
+        <div class="cards-grid" id="pokemon-grid"></div>
+    </section>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
