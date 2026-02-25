@@ -1,5 +1,5 @@
 # Stage 1: Build
-FROM node:20-alpine AS builder
+FROM node:20-bullseye AS builder
 
 WORKDIR /build
 
@@ -16,7 +16,7 @@ COPY . .
 RUN npm run build
 
 # Stage 2: Runtime (imagen más pequeña)
-FROM node:20-alpine
+FROM node:20-bullseye
 
 WORKDIR /app
 
@@ -38,7 +38,7 @@ RUN mkdir -p /root/logs
 EXPOSE 3001
 
 
-# Health check (nc ya viene en Alpine)
+# Health check (nc ya viene en Bullseye)
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
   CMD nc -z localhost 3001 || exit 1
 
