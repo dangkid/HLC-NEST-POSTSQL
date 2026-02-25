@@ -20,8 +20,8 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-# Instalar netcat para health checks
-RUN apk add --no-cache netcat-openbsd
+# Instalar busybox-extras para health checks
+RUN apk add --no-cache busybox-extras
 
 # Copiar node_modules del builder
 COPY --from=builder /build/node_modules ./node_modules
