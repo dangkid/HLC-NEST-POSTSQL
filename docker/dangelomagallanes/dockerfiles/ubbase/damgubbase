@@ -1,18 +1,22 @@
 FROM ubuntu
 
-# Usar HTTPS en lugar de HTTP (firewall de Contabo bloquea HTTP)
-RUN cat > /etc/apt/sources.list << 'EOF'
-deb https://archive.ubuntu.com/ubuntu noble main restricted universe multiverse
-deb https://archive.ubuntu.com/ubuntu noble-security main restricted universe multiverse
-deb https://archive.ubuntu.com/ubuntu noble-updates main restricted universe multiverse
-deb https://archive.ubuntu.com/ubuntu noble-backports main restricted universe multiverse
+# Limpiar sources.list y usar solo HTTP (funciona en Mac)
+RUN rm -f /etc/apt/sources.list.d/* && \
+    cat > /etc/apt/sources.list << 'EOF'
+deb http://archive.ubuntu.com/ubuntu noble main restricted universe multiverse
+deb http://archive.ubuntu.com/ubuntu noble-updates main restricted universe multiverse
+deb http://archive.ubuntu.com/ubuntu noble-backports main restricted universe multiverse
+deb http://security.ubuntu.com/ubuntu noble-security main restricted universe multiverse
 EOF
-RUN apt update && apt install -y --no-install-recommends \
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     nano \
-    net-tools iputils-ping \
+    net-tools \
+    iputils-ping \
     sudo \
-    openssh-server 
+    openssh-server && \
+    rm -rf /var/lib/apt/lists/* 
 
 RUN mkdir -p /root/admin/base
 WORKDIR /root/admin/base
