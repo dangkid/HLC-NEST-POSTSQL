@@ -1,6 +1,9 @@
 FROM ubuntu
 
-RUN apt update && apt install -y --no-install-recommends \
+# Cambiar a mirror alternativo de Ubuntu (more-stable.com)
+RUN sed -i 's|archive.ubuntu.com|mirrors.edge.kernel.org/ubuntu|g' /etc/apt/sources.list && \
+    sed -i 's|security.ubuntu.com|mirrors.edge.kernel.org/ubuntu-security|g' /etc/apt/sources.list && \
+    apt update && apt install -y --no-install-recommends \
     curl \
     nano \
     net-tools iputils-ping \
