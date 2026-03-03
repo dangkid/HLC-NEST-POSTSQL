@@ -1,0 +1,24 @@
+services:
+  web:
+    build:
+      context: /home/dangelo/HLC-NEST-POSTSQL/docker/dangelomagallanes/
+      dockerfile: ./dockerfiles/node_next/dockerfiles
+      args:
+        - INICIALES=damg
+    container_name: ctdamgpokeapinext
+    image: dangelomagallanes/pokeapinext
+    ports:
+      - 3001:3001
+    env_file:
+      - ./.env
+    volumes:
+      - ./logs:/root/logs
+    networks:
+      pnginxnext_network:
+        ipv4_address: 192.168.30.3
+networks:
+  pnginxnext_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.30.0/24

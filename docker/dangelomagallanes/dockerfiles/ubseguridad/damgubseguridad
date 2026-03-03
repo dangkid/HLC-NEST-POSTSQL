@@ -1,0 +1,8 @@
+FROM dangelomagallanes/ubbase
+
+RUN mkdir -p /root/admin/ubseguridad
+WORKDIR /root/admin/ubseguridad
+COPY ./dockerfiles/ubseguridad/admin/damgstart.sh .
+RUN chmod +x ./damgstart.sh
+
+ENTRYPOINT ["./damgstart.sh"]

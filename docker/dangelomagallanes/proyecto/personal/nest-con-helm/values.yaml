@@ -1,0 +1,37 @@
+app:
+  name: webnest
+  image:
+    repository: dangelomagallanes/nginxpokeapi
+    tag: latest
+    pullPolicy: Always
+  container: 
+    name: webnest
+    port: 3001
+    replicas: 3
+  service:
+    type: NodePort
+    port: 3001
+    nodePort: 30022
+    sshPort: 3456
+    sshTargetPort: 3456
+    sshNodePort: 30456
+  ingress:
+    host: api.dangelomagallanes.me
+    port: 3001
+
+postgres:
+  name: postgre
+  image:
+    repository: dangelomagallanes/postgre
+    tag: "latest"
+    pullPolicy: Always
+  service:
+    port: 5432
+  auth:
+    database: nestasir
+    username: postgres
+    password: usuario
+  persistence:
+    enabled: true
+    size: 1Gi
+    storageClassName: "microk8s-hostpath"

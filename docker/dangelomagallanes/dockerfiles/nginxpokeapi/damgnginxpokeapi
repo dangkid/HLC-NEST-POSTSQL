@@ -1,0 +1,8 @@
+FROM dangelomagallanes/pokeapi
+
+RUN mkdir -p /root/admin/nginxpokeapi
+WORKDIR /root/admin/nginxpokeapi
+COPY ./dockerfiles/nginxpokeapi/admin/damgstart.sh .
+RUN chmod +x ./damgstart.sh
+
+ENTRYPOINT ["./damgstart.sh"]

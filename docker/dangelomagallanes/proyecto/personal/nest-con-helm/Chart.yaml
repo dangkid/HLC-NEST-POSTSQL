@@ -1,0 +1,6 @@
+apiVersion: v2
+name: nest-con-helm
+description: Helm chart para el proyecto NestJS + PostgreSQL (dangelomagallanes)
+type: application
+version: 0.1.0
+appVersion: "1.16.0"

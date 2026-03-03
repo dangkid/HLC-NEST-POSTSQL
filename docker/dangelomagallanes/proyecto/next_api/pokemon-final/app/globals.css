@@ -1,0 +1,131 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  color: #fff;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+header {
+  text-align: center;
+  padding: 40px 0;
+}
+
+header h1 {
+  font-size: 2.5rem;
+  background: linear-gradient(90deg, #e94560, #ff6b6b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 10px;
+}
+
+header p {
+  color: #8899a6;
+  font-size: 1.1rem;
+}
+
+.pokemon-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+  padding: 20px 0;
+}
+
+.pokemon-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 24px;
+  transition: transform 0.3s, box-shadow 0.3s;
+  text-align: center;
+}
+
+.pokemon-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 40px rgba(233, 69, 96, 0.2);
+}
+
+.pokemon-card img {
+  width: 150px;
+  height: 150px;
+  object-fit: contain;
+}
+
+.pokemon-card h3 {
+  font-size: 1.3rem;
+  margin: 10px 0 5px;
+}
+
+.pokemon-card .type-badge {
+  display: inline-block;
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin: 8px 0;
+}
+
+.type-electrico { background: #f7d02c; color: #333; }
+.type-fuego { background: #ee8130; color: #fff; }
+.type-agua { background: #6390f0; color: #fff; }
+.type-planta { background: #7ac74c; color: #fff; }
+.type-fantasma { background: #735797; color: #fff; }
+.type-normal { background: #a8a77a; color: #fff; }
+.type-psiquico { background: #f95587; color: #fff; }
+.type-dragon { background: #6f35fc; color: #fff; }
+
+.stats {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 15px;
+}
+
+.stat {
+  text-align: center;
+}
+
+.stat-value {
+  display: block;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #e94560;
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  color: #8899a6;
+  text-transform: uppercase;
+}
+
+.loading {
+  text-align: center;
+  padding: 60px;
+  color: #8899a6;
+  font-size: 1.2rem;
+}
+
+.error {
+  text-align: center;
+  padding: 60px;
+  color: #e94560;
+  font-size: 1.2rem;
+}
+
+footer {
+  text-align: center;
+  padding: 40px 0;
+  color: #8899a6;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin-top: 40px;
+}

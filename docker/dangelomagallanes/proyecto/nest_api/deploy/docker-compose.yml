@@ -1,0 +1,24 @@
+services:
+  web:
+    build:
+      context: /home/dangelo/HLC-NEST-POSTSQL/docker/dangelomagallanes/
+      dockerfile: ./dockerfiles/nginxpokeapi/damgnginxpokeapi
+      args:
+        - INICIALES=damg
+    container_name: ctdamgnginxpokeapi
+    image: dangelomagallanes/nginxpokeapi
+    ports:
+      - 3010:3001
+    env_file:
+      - ./.env
+    volumes:
+      - ./logs:/root/logs
+    networks:
+      pnautocaravaneando:
+        ipv4_address: ${IP_WEB}
+networks:
+  pnautocaravaneando:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: ${SUBNET}

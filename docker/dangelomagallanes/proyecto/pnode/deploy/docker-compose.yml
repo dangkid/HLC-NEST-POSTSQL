@@ -1,0 +1,24 @@
+services:
+  web:
+    build:
+      context: /home/dangelo/HLC-NEST-POSTSQL/docker/dangelomagallanes/
+      dockerfile: ./dockerfiles/nest/damgpokeapi
+      args:
+        - INICIALES=damg
+    container_name: ctdamgpokeapi
+    image: dangelomagallanes/pokeapi
+    ports:
+      - 3000:3000
+    env_file:
+      - ./.env
+    volumes:
+      - ./logs:/root/logs
+    networks:
+      pnginx_network:
+        ipv4_address: 192.168.23.3
+networks:
+  pnginx_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: ${SUBNET}

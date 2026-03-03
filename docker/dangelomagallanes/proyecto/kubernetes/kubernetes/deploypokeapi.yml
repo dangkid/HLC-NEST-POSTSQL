@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webnest-deployment
+  namespace: proyecto-nest
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: webnest
+  template:
+    metadata:
+      labels:
+        app: webnest
+    spec:
+      containers:
+      - name: webnest
+        image: dangelomagallanes/nginxpokeapi
+        ports:
+        - containerPort: 3001
+        - containerPort: 22452
