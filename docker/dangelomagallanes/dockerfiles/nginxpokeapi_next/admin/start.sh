@@ -43,9 +43,9 @@ cofiguracion_final_nginx(){
 main(){
     mkdir -p /root/logs/next_final
     touch /root/logs/next_final/next_final.log
+    load_entrypoint_ubseguridad
     load_entrypoint_node
     cofiguracion_final_nginx
-    load_entrypoint_ubseguridad
 }
 
 main
