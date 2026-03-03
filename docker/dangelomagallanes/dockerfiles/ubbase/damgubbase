@@ -1,11 +1,11 @@
 FROM ubuntu
 
-# Remplazar sources.list con mirror alternativo
+# Usar HTTPS en lugar de HTTP (firewall de Contabo bloquea HTTP)
 RUN cat > /etc/apt/sources.list << 'EOF'
-deb http://mirrors.edge.kernel.org/ubuntu noble main restricted universe multiverse
-deb http://mirrors.edge.kernel.org/ubuntu noble-security main restricted universe multiverse
-deb http://mirrors.edge.kernel.org/ubuntu noble-updates main restricted universe multiverse
-deb http://mirrors.edge.kernel.org/ubuntu noble-backports main restricted universe multiverse
+deb https://archive.ubuntu.com/ubuntu noble main restricted universe multiverse
+deb https://archive.ubuntu.com/ubuntu noble-security main restricted universe multiverse
+deb https://archive.ubuntu.com/ubuntu noble-updates main restricted universe multiverse
+deb https://archive.ubuntu.com/ubuntu noble-backports main restricted universe multiverse
 EOF
 RUN apt update && apt install -y --no-install-recommends \
     curl \
