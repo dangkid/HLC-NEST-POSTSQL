@@ -4,7 +4,7 @@ services:
       context: /home/dangelo/HLC-NEST-POSTSQL/docker/dangelomagallanes/
       dockerfile: ./dockerfiles/nginxpokeapi_next/dockerfiles
     container_name: pokeapi_next_finalizado
-    image: dangelomagallanes/pokeapi_next_finalizado
+    image: dangekid/pokeapi_next_finalizado
     ports:
       - "8080:80"
     env_file:

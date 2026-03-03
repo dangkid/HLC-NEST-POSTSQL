@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: webnest
-        image: dangelomagallanes/nginxpokeapi
+        image: dangekid/nginxpokeapi
         ports:
         - containerPort: 3001
         - containerPort: 22452
