@@ -5,7 +5,7 @@
 
 set -e
 
-DOCKER_USER="dangelomagallanes"
+DOCKER_USER="dangekid"
 
 echo "Iniciando sesión en Docker Hub..."
 docker login
