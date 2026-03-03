@@ -1,9 +1,13 @@
 FROM ubuntu
 
-# Cambiar a mirror alternativo de Ubuntu (more-stable.com)
-RUN sed -i 's|archive.ubuntu.com|mirrors.edge.kernel.org/ubuntu|g' /etc/apt/sources.list && \
-    sed -i 's|security.ubuntu.com|mirrors.edge.kernel.org/ubuntu-security|g' /etc/apt/sources.list && \
-    apt update && apt install -y --no-install-recommends \
+# Remplazar sources.list con mirror alternativo
+RUN cat > /etc/apt/sources.list << 'EOF'
+deb http://mirrors.edge.kernel.org/ubuntu noble main restricted universe multiverse
+deb http://mirrors.edge.kernel.org/ubuntu noble-security main restricted universe multiverse
+deb http://mirrors.edge.kernel.org/ubuntu noble-updates main restricted universe multiverse
+deb http://mirrors.edge.kernel.org/ubuntu noble-backports main restricted universe multiverse
+EOF
+RUN apt update && apt install -y --no-install-recommends \
     curl \
     nano \
     net-tools iputils-ping \
