@@ -1,4 +1,4 @@
-FROM dangelomagallanes/nginx1
+FROM dangekid/nginx1
 
 # Instalar Node.js 22
 RUN apt-get update && apt-get install -y curl gnupg software-properties-common

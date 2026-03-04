@@ -1,4 +1,4 @@
-FROM dangelomagallanes/ubbase
+FROM dangekid/ubbase
 
 RUN mkdir -p /root/admin/ubseguridad
 WORKDIR /root/admin/ubseguridad
