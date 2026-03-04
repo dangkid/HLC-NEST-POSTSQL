@@ -1,8 +1,18 @@
-FROM dangekid/pokeapinext
+FROM node:22-alpine
 
-RUN mkdir -p /root/admin/nginxpokeapi_next
-WORKDIR /root/admin/nginxpokeapi_next
-COPY ./dockerfiles/nginxpokeapi_next/admin/ .
-RUN chmod +x ./start.sh
+RUN apk add --no-cache nginx bash
 
-ENTRYPOINT ["./start.sh"]
+WORKDIR /app
+
+COPY ./proyecto/next_api/pokemon-final/ .
+
+# Create nginx config
+RUN mkdir -p /etc/nginx/sites-available /etc/nginx/sites-enabled
+RUN echo 'server { listen 80 default_server; location / { root /var/www/html; try_files $uri $uri/ =404; } }' > /etc/nginx/sites-available/default
+RUN ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
+
+RUN chmod +x entrypoint.sh
+
+EXPOSE 80
+
+ENTRYPOINT ["./entrypoint.sh"]

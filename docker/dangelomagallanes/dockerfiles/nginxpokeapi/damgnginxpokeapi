@@ -1,8 +1,13 @@
-FROM dangekid/pokeapi
+FROM node:22-alpine
 
-RUN mkdir -p /root/admin/nginxpokeapi
-WORKDIR /root/admin/nginxpokeapi
-COPY ./dockerfiles/nginxpokeapi/admin/damgstart.sh .
-RUN chmod +x ./damgstart.sh
+RUN apk add --no-cache netcat-openbsd bash
 
-ENTRYPOINT ["./damgstart.sh"]
+WORKDIR /app
+
+COPY ./proyecto/nest_api/proyecto/ .
+
+RUN chmod +x entrypoint.sh
+
+EXPOSE 3001
+
+ENTRYPOINT ["./entrypoint.sh"]
