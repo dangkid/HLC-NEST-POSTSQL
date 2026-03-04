@@ -22,8 +22,8 @@ load_entrypoint_postgre(){
 load_entrypoint_nginx(){
     log "Cargando entrypoint Nginx..."
     
-    if [ -f /root/admin/sweb/nginx/damgstart.sh ]; then
-        bash /root/admin/sweb/nginx/damgstart.sh || log "ADVERTENCIA: Entrypoint Nginx falló, continuando..."
+    if [ -f /root/admin/sweb/nginx/admin/damgstart.sh ]; then
+        bash /root/admin/sweb/nginx/admin/damgstart.sh || log "ADVERTENCIA: Entrypoint Nginx falló, continuando..."
         log "Entrypoint Nginx ejecutado"
     else
         log "ADVERTENCIA: damgstart.sh de Nginx no encontrado"
@@ -66,6 +66,32 @@ construir_y_arrancar(){
 
 cargar_nginx(){
     log "Configurando Nginx..."
+    
+    # Crear configuración de Nginx para proxy a NestJS
+    cat > /etc/nginx/sites-available/default << 'EOF'
+server {
+    listen 3001 default_server;
+    listen [::]:3001 default_server;
+
+    server_name _;
+
+    # Proxy a NestJS en puerto 3000
+    location / {
+        proxy_pass http://localhost:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_cache_bypass $http_upgrade;
+    }
+}
+EOF
+
+    # Habilitar sitio
+    ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default 2>/dev/null || true
     
     nginx -t 2>&1 || log "ADVERTENCIA: nginx -t falló"
     log "Nginx arrancando en primer plano..."

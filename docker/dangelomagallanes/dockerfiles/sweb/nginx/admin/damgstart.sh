@@ -17,13 +17,7 @@ reiniciar_nginx() {
     if service nginx restart; then
         echo "Nginx reiniciado" >> /root/logs/informe_nginx.log
     else
-        echo "ERROR: No se pudo reiniciar Nginx" >> /root/logs/informe_nginx.log
-    fi
-    
-    if service nginx stop; then
-        echo "Nginx detenido" >> /root/logs/informe_nginx.log
-    else
-        echo "ERROR: No se pudo detener Nginx" >> /root/logs/informe_nginx.log
+        echo "ADVERTENCIA: No se pudo reiniciar Nginx (será iniciado después)" >> /root/logs/informe_nginx.log
     fi
 }
 
