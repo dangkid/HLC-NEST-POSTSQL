@@ -1,51 +1,38 @@
 #!/bin/bash
 
-load_entrypoint_node(){
-    bash /root/admin/node_next/start.sh
-    echo "Entrypoint node cargado" >> /root/logs/next_final/next_final.log
-}
+set -e
 
-load_entrypoint_ubseguridad(){
-    bash /root/admin/ubseguridad/damgstart.sh
-    echo "Entrypoint seguridad cargado" >> /root/logs/next_final/next_final.log
-}
+mkdir -p /root/logs/next_final
+touch /root/logs/next_final/next_final.log
 
-cofiguracion_final_nginx(){
-    # 1. Aplicar la configuración de Nginx (para escuchar en 80)
-    cp /root/admin/nginxpokeapi_next/nginx.conf /etc/nginx/sites-available/default
-    
-    cd /root/admin/node_next/next-pokeapi
-    
-    # Limpiar caché y dependencias de otros entornos
-    rm -rf node_modules package-lock.json .next
-    npm install
-    
-    # Fix permisos de ejecución para next
-    chmod +x node_modules/.bin/next
-    # 2. Compilar Next.js (output: export estático)
-    npm run build
-    
-    # 2.5 Mover los archivos del export a Nginx
-    cp -r /root/admin/node_next/next-pokeapi/out/* /var/www/html/
-    chown -R www-data:www-data /var/www/html/
-    chmod -R 755 /var/www/html/
-    echo "Next.js compilado e instalado en /var/www/html" >> /root/logs/next_final/next_final.log
-    
-    # 3. Mover página de error personalizada
-    cp /root/admin/node_next/error.html /var/www/html/error.html
-    echo "Página de error copiada a /var/www/html" >> /root/logs/next_final/next_final.log
-    
-    # 4. Iniciar Nginx en primer plano
-    echo "Nginx iniciado en primer plano (Proxy)" >> /root/logs/next_final/next_final.log
-    nginx -g "daemon off;"
-}
+# 1. Ejecutar seguridad (no bloqueante)
+if [ -f "/root/admin/ubseguridad/damgstart.sh" ]; then
+    bash /root/admin/ubseguridad/damgstart.sh &
+    echo "[$(date)] Entrypoint seguridad cargado" >> /root/logs/next_final/next_final.log
+fi
 
-main(){
-    mkdir -p /root/logs/next_final
-    touch /root/logs/next_final/next_final.log
-    load_entrypoint_ubseguridad
-    load_entrypoint_node
-    cofiguracion_final_nginx
-}
+# 2. Preparar aplicación Next.js
+cd /root/admin/node_next/next-pokeapi
+echo "[$(date)] Iniciando compilación de Next.js en $(pwd)" >> /root/logs/next_final/next_final.log
 
-main
+# Instalar dependencias
+npm install 2>&1 | tail -5 >> /root/logs/next_final/next_final.log
+
+# Compilar Next.js
+npm run build 2>&1 | tail -10 >> /root/logs/next_final/next_final.log
+echo "[$(date)] Next.js compilado exitosamente" >> /root/logs/next_final/next_final.log
+
+# 3. Iniciar Next.js en segundo plano en puerto 3000
+echo "[$(date)] Iniciando servidor Next.js en puerto 3000" >> /root/logs/next_final/next_final.log
+npm start &
+NEXT_PID=$!
+sleep 5
+echo "[$(date)] Proceso Next.js iniciado con PID $NEXT_PID" >> /root/logs/next_final/next_final.log
+
+# 4. Configurar y iniciar Nginx como proxy
+cp /root/admin/nginxpokeapi_next/nginx.conf /etc/nginx/sites-available/default
+echo "[$(date)] Configuración de Nginx aplicada" >> /root/logs/next_final/next_final.log
+
+# Iniciar Nginx
+echo "[$(date)] Iniciando Nginx como proxy en puerto 80 hacia localhost:3000" >> /root/logs/next_final/next_final.log
+nginx -g "daemon off;"
