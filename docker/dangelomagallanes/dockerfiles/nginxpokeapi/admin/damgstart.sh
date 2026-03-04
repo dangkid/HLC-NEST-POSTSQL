@@ -68,16 +68,19 @@ cargar_nginx(){
     log "Configurando Nginx..."
     
     # Crear configuración de Nginx para proxy a NestJS
-    cat > /etc/nginx/sites-available/default << 'EOF'
+    mkdir -p /etc/nginx/conf.d
+    cat > /etc/nginx/conf.d/pokemon.conf << 'NGINX_CONFIG'
+upstream nestjs_backend {
+    server localhost:3050;
+}
+
 server {
     listen 3001 default_server;
     listen [::]:3001 default_server;
-
     server_name _;
 
-    # Proxy a NestJS en puerto 3050
     location / {
-        proxy_pass http://localhost:3050;
+        proxy_pass http://nestjs_backend;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection 'upgrade';
@@ -88,14 +91,16 @@ server {
         proxy_cache_bypass $http_upgrade;
     }
 }
-EOF
+NGINX_CONFIG
 
-    # Habilitar sitio
-    ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default 2>/dev/null || true
-    
-    nginx -t 2>&1 || log "ADVERTENCIA: nginx -t falló"
-    log "Nginx arrancando en primer plano..."
-    nginx -g 'daemon off;'
+    log "Validando configuración de Nginx..."
+    if nginx -t 2>&1 | tee -a "$LOG_FILE"; then
+        log "Nginx arrancando en primer plano..."
+        nginx -g 'daemon off;'
+    else
+        log "ERROR: Validación de Nginx falló"
+        exit 1
+    fi
 }
 
 load_entrypoint_base(){
