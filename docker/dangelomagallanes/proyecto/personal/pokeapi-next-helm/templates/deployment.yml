@@ -21,3 +21,17 @@ spec:
           imagePullPolicy: {{ .Values.app.image.pullPolicy }}
           ports:
             - containerPort: {{ .Values.app.container.port }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: {{ .Values.app.container.port }}
+            initialDelaySeconds: {{ .Values.app.readiness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.app.readiness.periodSeconds }}
+            timeoutSeconds: {{ .Values.app.readiness.timeoutSeconds }}
+          livenessProbe:
+            httpGet:
+              path: /
+              port: {{ .Values.app.container.port }}
+            initialDelaySeconds: 180
+            periodSeconds: 30
+            timeoutSeconds: 10

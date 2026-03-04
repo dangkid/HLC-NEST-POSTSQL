@@ -1,3 +1,5 @@
+createNamespace: false
+
 app:
   name: webnext
   image:
@@ -16,3 +18,7 @@ app:
     enabled: true
     host: pokeapi.dangelomagallanes.me
     port: 80
+  readiness:
+    initialDelaySeconds: 120
+    periodSeconds: 10
+    timeoutSeconds: 5

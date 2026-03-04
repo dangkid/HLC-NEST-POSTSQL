@@ -1,3 +1,5 @@
+createNamespace: false
+
 app:
   name: webnest
   image:
@@ -19,6 +21,10 @@ app:
   env:
     DB_PORT: "5432"
     PORT: "3050"
+  readiness:
+    initialDelaySeconds: 120
+    periodSeconds: 10
+    timeoutSeconds: 5
 
 postgres:
   name: postgre
