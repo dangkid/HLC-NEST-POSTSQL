@@ -15,18 +15,7 @@ load_entrypoint_postgre(){
         bash /root/admin/postgre/damgstart.sh || log "ADVERTENCIA: Entrypoint PostgreSQL falló, continuando..."
         log "Entrypoint PostgreSQL ejecutado"
     else
-        log "ADVERTENCIA: damgstart.sh de PostgreSQL no encontrado"
-    fi
-}
-
-load_entrypoint_nginx(){
-    log "Cargando entrypoint Nginx..."
-    
-    if [ -f /root/admin/sweb/nginx/admin/damgstart.sh ]; then
-        bash /root/admin/sweb/nginx/admin/damgstart.sh || log "ADVERTENCIA: Entrypoint Nginx falló, continuando..."
-        log "Entrypoint Nginx ejecutado"
-    else
-        log "ADVERTENCIA: damgstart.sh de Nginx no encontrado"
+        log "ADVERTENCIA: damgstart.sh de PostgreSQL no encontrado (usando contenedor Docker externo)"
     fi
 }
 
@@ -120,7 +109,6 @@ main(){
     log "Fecha: $(date)"
     load_entrypoint_base
     load_entrypoint_postgre
-    load_entrypoint_nginx
     directorio_de_trabajo
     construir_y_arrancar
     cargar_nginx
