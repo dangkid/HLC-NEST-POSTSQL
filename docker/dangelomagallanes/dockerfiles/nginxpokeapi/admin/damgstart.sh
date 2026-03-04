@@ -8,14 +8,13 @@ log() {
     echo "$1" >> "$LOG_FILE"
 }
 
-load_entrypoint_postgre(){
-    log "Cargando entrypoint PostgreSQL..."
-    
-    if [ -f /root/admin/postgre/damgstart.sh ]; then
-        bash /root/admin/postgre/damgstart.sh || log "ADVERTENCIA: Entrypoint PostgreSQL falló, continuando..."
-        log "Entrypoint PostgreSQL ejecutado"
+load_entrypoint_base(){
+    log "Cargando entrypoint base (SSH, usuario, sudo)..."
+    if [ -f /root/admin/base/damgstart.sh ]; then
+        bash /root/admin/base/damgstart.sh || log "ADVERTENCIA: Entrypoint base falló, continuando..."
+        log "Entrypoint base ejecutado"
     else
-        log "ADVERTENCIA: damgstart.sh de PostgreSQL no encontrado (usando contenedor Docker externo)"
+        log "ADVERTENCIA: damgstart.sh de base no encontrado"
     fi
 }
 
@@ -56,20 +55,19 @@ construir_y_arrancar(){
 cargar_nginx(){
     log "Configurando Nginx..."
     
-    # Crear configuración de Nginx para proxy a NestJS
-    mkdir -p /etc/nginx/conf.d
-    cat > /etc/nginx/conf.d/pokemon.conf << 'NGINX_CONFIG'
-upstream nestjs_backend {
-    server localhost:3050;
-}
-
+    # Eliminar config default que escucha en puerto 80 para evitar conflictos
+    rm -f /etc/nginx/sites-enabled/default 2>/dev/null || true
+    
+    # Crear configuración de Nginx para proxy a NestJS en puerto 3001
+    cat > /etc/nginx/sites-available/pokemon-api << 'NGINX_CONF'
 server {
     listen 3001 default_server;
     listen [::]:3001 default_server;
+
     server_name _;
 
     location / {
-        proxy_pass http://nestjs_backend;
+        proxy_pass http://127.0.0.1:3050;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection 'upgrade';
@@ -80,26 +78,18 @@ server {
         proxy_cache_bypass $http_upgrade;
     }
 }
-NGINX_CONFIG
+NGINX_CONF
 
-    log "Validando configuración de Nginx..."
-    if nginx -t 2>&1 | tee -a "$LOG_FILE"; then
-        log "Nginx arrancando en primer plano..."
-        nginx -g 'daemon off;'
+    ln -sf /etc/nginx/sites-available/pokemon-api /etc/nginx/sites-enabled/pokemon-api
+    
+    if nginx -t 2>&1; then
+        log "Configuración Nginx válida"
     else
         log "ERROR: Validación de Nginx falló"
-        exit 1
     fi
-}
-
-load_entrypoint_base(){
-    log "Cargando entrypoint base (SSH, usuario, sudo)..."
-    if [ -f /root/admin/base/damgstart.sh ]; then
-        bash /root/admin/base/damgstart.sh || log "ADVERTENCIA: Entrypoint base falló, continuando..."
-        log "Entrypoint base ejecutado"
-    else
-        log "ADVERTENCIA: damgstart.sh de base no encontrado"
-    fi
+    
+    log "Nginx arrancando en primer plano..."
+    nginx -g 'daemon off;'
 }
 
 main(){
@@ -108,7 +98,6 @@ main(){
     log "=== Iniciando contenedor NestJS ==="
     log "Fecha: $(date)"
     load_entrypoint_base
-    load_entrypoint_postgre
     directorio_de_trabajo
     construir_y_arrancar
     cargar_nginx

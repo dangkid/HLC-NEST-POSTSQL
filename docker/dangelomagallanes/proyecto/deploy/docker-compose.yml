@@ -1,0 +1,62 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: postgres_pokemon
+    environment:
+      POSTGRES_USER: pokemonuser
+      POSTGRES_PASSWORD: pokemonpass123
+      POSTGRES_DB: pokemondb
+    ports:
+      - 5433:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      pokemon_network:
+        ipv4_address: 192.168.25.2
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pokemonuser -d pokemondb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    image: dangekid/nginxpokeapi
+    container_name: ctdamgnginxpokeapi
+    ports:
+      - 3010:3001
+    environment:
+      DB_HOST: postgres_pokemon
+      DB_PORT: 5432
+      DB_USER: pokemonuser
+      DB_PASSWORD: pokemonpass123
+      DATABASE: pokemondb
+      PORT: 3050
+    volumes:
+      - ./logs/api:/root/logs
+    networks:
+      pokemon_network:
+        ipv4_address: 192.168.25.3
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  frontend:
+    image: dangekid/pokeapi_next_finalizado
+    container_name: pokeapi_next_finalizado
+    ports:
+      - 8080:80
+    volumes:
+      - ./logs/frontend:/root/logs
+    networks:
+      pokemon_network:
+        ipv4_address: 192.168.25.4
+
+volumes:
+  postgres_data:
+
+networks:
+  pokemon_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.25.0/24
