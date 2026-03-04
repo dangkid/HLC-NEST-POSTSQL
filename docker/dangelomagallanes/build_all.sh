@@ -7,18 +7,18 @@
 #
 # ORDEN DE CONSTRUCCIÓN:
 # 1. ubbase         (FROM ubuntu)
-# 2. ubseguridad    (FROM dangelomagallanes/ubbase)
-# 3. nginx1         (FROM dangelomagallanes/ubseguridad)
-# 4. postgre        (FROM dangelomagallanes/ubseguridad)
-# 5. pokeapi        (FROM dangelomagallanes/nginx1) - NestJS
-# 6. pokeapinext    (FROM dangelomagallanes/nginx1) - Next.js
-# 7. nginxpokeapi   (FROM dangelomagallanes/pokeapi) - FINAL NestJS
-# 8. pokeapi_next_finalizado (FROM dangelomagallanes/pokeapinext) - FINAL Next.js
+# 2. ubseguridad    (FROM dangekid/ubbase)
+# 3. nginx1         (FROM dangekid/ubseguridad)
+# 4. postgre        (FROM dangekid/ubseguridad)
+# 5. pokeapi        (FROM dangekid/nginx1) - NestJS
+# 6. pokeapinext    (FROM dangekid/nginx1) - Next.js
+# 7. nginxpokeapi   (FROM dangekid/pokeapi) - FINAL NestJS
+# 8. pokeapi_next_finalizado (FROM dangekid/pokeapinext) - FINAL Next.js
 #############################################################
 
 set -e
 
-DOCKER_USER="dangelomagallanes"
+DOCKER_USER="dangekid"
 BASE_DIR="$(cd "$(dirname "$0")" && pwd)"
 DOCKERFILES_DIR="$BASE_DIR/dockerfiles"
 
