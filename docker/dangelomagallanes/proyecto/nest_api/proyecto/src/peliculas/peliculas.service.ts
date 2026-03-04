@@ -32,7 +32,7 @@ export class PeliculasService implements OnModuleInit {
     return this.peliculaRepository.find();
   }
 
-  findOne(id: number): Promise<Pelicula> {
+  findOne(id: number): Promise<Pelicula | null> {
     return this.peliculaRepository.findOneBy({ id });
   }
 
@@ -56,7 +56,7 @@ export class PeliculasService implements OnModuleInit {
     return this.peliculaRepository.save(pelicula);
   }
 
-  async update(id: number, updatePeliculaDto: UpdatePeliculaDto): Promise<Pelicula> {
+  async update(id: number, updatePeliculaDto: UpdatePeliculaDto): Promise<Pelicula | null> {
     await this.peliculaRepository.update(id, updatePeliculaDto);
     return this.peliculaRepository.findOneBy({ id });
   }

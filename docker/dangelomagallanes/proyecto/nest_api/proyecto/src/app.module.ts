@@ -15,7 +15,7 @@ import { PeliculasModule } from './peliculas/peliculas.module';
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.DB_HOST || 'localhost',
-      port: parseInt(process.env.DB_PORT) || 5432,
+      port: parseInt(process.env.DB_PORT || '5432') || 5432,
       username: process.env.DB_USER || 'pokemonuser',
       password: process.env.DB_PASSWORD || 'pokemonpass123',
       database: process.env.DATABASE || 'pokemondb',

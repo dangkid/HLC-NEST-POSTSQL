@@ -42,7 +42,7 @@ export class PokemonService implements OnModuleInit {
     return this.pokemonRepository.find();
   }
 
-  findOne(id: number): Promise<Pokemon> {
+  findOne(id: number): Promise<Pokemon | null> {
     return this.pokemonRepository.findOneBy({ id });
   }
 
@@ -72,7 +72,7 @@ export class PokemonService implements OnModuleInit {
     return this.pokemonRepository.save(pokemon);
   }
 
-  async update(id: number, updatePokemonDto: UpdatePokemonDto): Promise<Pokemon> {
+  async update(id: number, updatePokemonDto: UpdatePokemonDto): Promise<Pokemon | null> {
     await this.pokemonRepository.update(id, updatePokemonDto);
     return this.pokemonRepository.findOneBy({ id });
   }
