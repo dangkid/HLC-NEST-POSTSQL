@@ -1,20 +1,7 @@
-FROM node:22-alpine
+FROM dangekid/pokeapi
 
-RUN apk add --no-cache netcat-openbsd bash
+WORKDIR /root/admin/nginxpokeapi
+COPY ./dockerfiles/nginxpokeapi/admin/damgstart.sh .
+RUN chmod +x ./damgstart.sh
 
-WORKDIR /app
-
-# Copy NestJS project only
-COPY proyecto/nest_api/proyecto/package*.json ./
-COPY proyecto/nest_api/proyecto/.npmrc ./
-COPY proyecto/nest_api/proyecto/tsconfig*.json ./
-COPY proyecto/nest_api/proyecto/src ./src
-COPY proyecto/nest_api/proyecto/test ./test
-COPY proyecto/nest_api/proyecto/*.json ./
-COPY proyecto/nest_api/proyecto/entrypoint.sh ./
-
-RUN chmod +x entrypoint.sh
-
-EXPOSE 3001
-
-ENTRYPOINT ["./entrypoint.sh"]
+ENTRYPOINT ["./damgstart.sh"]
