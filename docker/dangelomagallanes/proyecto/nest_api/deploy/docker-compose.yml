@@ -7,7 +7,7 @@ services:
       POSTGRES_PASSWORD: pokemonpass123
       POSTGRES_DB: pokemondb
     ports:
-      - 5432:5432
+      - 5433:5432
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
@@ -37,6 +37,7 @@ services:
       DB_USER: pokemonuser
       DB_PASSWORD: pokemonpass123
       DATABASE: pokemondb
+      PORT: 3050
     volumes:
       - ./logs:/root/logs
     networks:
