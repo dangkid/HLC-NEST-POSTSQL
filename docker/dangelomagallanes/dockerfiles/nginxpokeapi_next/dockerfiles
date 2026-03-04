@@ -1,7 +1,7 @@
 FROM dangekid/pokeapinext
 
 WORKDIR /root/admin/nginxpokeapi_next
-COPY ./dockerfiles/nginxpokeapi_next/admin/start.sh .
+COPY ./dockerfiles/nginxpokeapi_next/admin/ .
 RUN chmod +x ./start.sh
 
 ENTRYPOINT ["./start.sh"]
