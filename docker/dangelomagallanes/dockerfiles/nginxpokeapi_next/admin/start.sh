@@ -5,34 +5,50 @@ set -e
 mkdir -p /root/logs/next_final
 touch /root/logs/next_final/next_final.log
 
-# 1. Ejecutar seguridad (no bloqueante)
-if [ -f "/root/admin/ubseguridad/damgstart.sh" ]; then
-    bash /root/admin/ubseguridad/damgstart.sh &
-    echo "[$(date)] Entrypoint seguridad cargado" >> /root/logs/next_final/next_final.log
-fi
+echo "[$(date)] ===== Iniciando contenedor Next.js + Nginx =====" >> /root/logs/next_final/next_final.log
 
-# 2. Preparar aplicación Next.js
+# 1. Preparar aplicación Next.js
+echo "[$(date)] Preparando Next.js en /root/admin/node_next/next-pokeapi" >> /root/logs/next_final/next_final.log
 cd /root/admin/node_next/next-pokeapi
-echo "[$(date)] Iniciando compilación de Next.js en $(pwd)" >> /root/logs/next_final/next_final.log
 
 # Instalar dependencias
-npm install 2>&1 | tail -5 >> /root/logs/next_final/next_final.log
+echo "[$(date)] Instalando dependencias..." >> /root/logs/next_final/next_final.log
+npm install >> /root/logs/next_final/next_final.log 2>&1
 
 # Compilar Next.js
-npm run build 2>&1 | tail -10 >> /root/logs/next_final/next_final.log
-echo "[$(date)] Next.js compilado exitosamente" >> /root/logs/next_final/next_final.log
+echo "[$(date)] Compilando Next.js..." >> /root/logs/next_final/next_final.log
+npm run build >> /root/logs/next_final/next_final.log 2>&1
+echo "[$(date)] ✓ Next.js compilado exitosamente" >> /root/logs/next_final/next_final.log
 
-# 3. Iniciar Next.js en segundo plano en puerto 3000
-echo "[$(date)] Iniciando servidor Next.js en puerto 3000" >> /root/logs/next_final/next_final.log
-npm start &
+# 2. Iniciar Next.js en background en puerto 3000
+echo "[$(date)] Iniciando servidor Next.js en puerto 3000..." >> /root/logs/next_final/next_final.log
+npm start > /root/logs/next_final/nextjs.log 2>&1 &
 NEXT_PID=$!
-sleep 5
 echo "[$(date)] Proceso Next.js iniciado con PID $NEXT_PID" >> /root/logs/next_final/next_final.log
 
-# 4. Configurar y iniciar Nginx como proxy
-cp /root/admin/nginxpokeapi_next/nginx.conf /etc/nginx/sites-available/default
-echo "[$(date)] Configuración de Nginx aplicada" >> /root/logs/next_final/next_final.log
+# Esperar a que Next.js esté listo
+sleep 10
+if ps -p $NEXT_PID > /dev/null; then
+    echo "[$(date)] ✓ Next.js está corriendo" >> /root/logs/next_final/next_final.log
+else
+    echo "[$(date)] ✗ ERROR: Next.js falló al iniciar" >> /root/logs/next_final/next_final.log
+    cat /root/logs/next_final/nextjs.log
+    exit 1
+fi
 
-# Iniciar Nginx
-echo "[$(date)] Iniciando Nginx como proxy en puerto 80 hacia localhost:3000" >> /root/logs/next_final/next_final.log
+# 3. Configurar Nginx como proxy
+echo "[$(date)] Configurando Nginx como proxy hacia localhost:3000" >> /root/logs/next_final/next_final.log
+cp /root/admin/nginxpokeapi_next/nginx.conf /etc/nginx/sites-available/default
+
+# Validar configuración
+nginx -t >> /root/logs/next_final/next_final.log 2>&1 || {
+    echo "[$(date)] ✗ ERROR: Configuración de Nginx inválida" >> /root/logs/next_final/next_final.log
+    exit 1
+}
+
+echo "[$(date)] ✓ Configuración de Nginx validada" >> /root/logs/next_final/next_final.log
+
+# 4. Iniciar Nginx en foreground
+echo "[$(date)] Iniciando Nginx en puerto 80 (daemon off)" >> /root/logs/next_final/next_final.log
+echo "[$(date)] ===== Contenedor completamente operacional =====" >> /root/logs/next_final/next_final.log
 nginx -g "daemon off;"
