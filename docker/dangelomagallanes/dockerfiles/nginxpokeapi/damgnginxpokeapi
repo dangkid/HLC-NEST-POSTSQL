@@ -4,7 +4,14 @@ RUN apk add --no-cache netcat-openbsd bash
 
 WORKDIR /app
 
-COPY ./proyecto/nest_api/proyecto/ .
+# Copy NestJS project only
+COPY proyecto/nest_api/proyecto/package*.json ./
+COPY proyecto/nest_api/proyecto/.npmrc ./
+COPY proyecto/nest_api/proyecto/tsconfig*.json ./
+COPY proyecto/nest_api/proyecto/src ./src
+COPY proyecto/nest_api/proyecto/test ./test
+COPY proyecto/nest_api/proyecto/*.json ./
+COPY proyecto/nest_api/proyecto/entrypoint.sh ./
 
 RUN chmod +x entrypoint.sh
 
