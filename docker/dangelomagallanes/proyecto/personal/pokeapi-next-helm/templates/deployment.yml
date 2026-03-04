@@ -21,9 +21,3 @@ spec:
           imagePullPolicy: {{ .Values.app.image.pullPolicy }}
           ports:
             - containerPort: {{ .Values.app.container.port }}
-            - containerPort: 3456
-          command: ["/bin/bash", "-c"]
-          args:
-            - |
-              service ssh start
-              nginx -g 'daemon off;'

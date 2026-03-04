@@ -1,7 +1,7 @@
 app:
   name: webnext
   image:
-    repository: dangelomagallanes/pokeapi_next_finalizado
+    repository: dangekid/pokeapi_next_finalizado
     tag: latest
     pullPolicy: Always
   container:
@@ -12,9 +12,7 @@ app:
     type: NodePort
     port: 80
     nodePort: 30087
-    sshPort: 3456
-    sshTargetPort: 3456
-    sshNodePort: 30457
   ingress:
+    enabled: true
     host: pokeapi.dangelomagallanes.me
     port: 80

@@ -1,36 +1,37 @@
 app:
   name: webnest
   image:
-    repository: dangelomagallanes/nginxpokeapi
+    repository: dangekid/nginxpokeapi
     tag: latest
     pullPolicy: Always
-  container: 
+  container:
     name: webnest
     port: 3001
-    replicas: 3
+    replicas: 2
   service:
     type: NodePort
     port: 3001
-    nodePort: 30022
-    sshPort: 3456
-    sshTargetPort: 3456
-    sshNodePort: 30456
+    nodePort: 30010
   ingress:
+    enabled: true
     host: api.dangelomagallanes.me
     port: 3001
+  env:
+    DB_PORT: "5432"
+    PORT: "3050"
 
 postgres:
   name: postgre
   image:
-    repository: dangelomagallanes/postgre
-    tag: "latest"
-    pullPolicy: Always
+    repository: postgres
+    tag: "15-alpine"
+    pullPolicy: IfNotPresent
   service:
     port: 5432
   auth:
-    database: nestasir
-    username: postgres
-    password: usuario
+    database: pokemondb
+    username: pokemonuser
+    password: pokemonpass123
   persistence:
     enabled: true
     size: 1Gi

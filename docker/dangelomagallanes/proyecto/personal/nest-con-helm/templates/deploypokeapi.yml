@@ -20,28 +20,27 @@ spec:
         ports:
         - containerPort: {{ .Values.app.container.port }}
         env:
-        - name: POSTGRES_USER
-          valueFrom:
-            secretKeyRef:
-              name: postgre-secret
-              key: POSTGRES_USER
-        - name: POSTGRES_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: postgre-secret
-              key: POSTGRES_PASSWORD
-        - name: POSTGRES_DB
-          valueFrom:
-            secretKeyRef:
-              name: postgre-secret
-              key: POSTGRES_DB
-        - name: POSTGRES_HOST
+        - name: DB_HOST
           valueFrom:
             configMapKeyRef:
               name: postgre-configmap
               key: POSTGRES_HOST
-        - name: POSTGRES_PORT
+        - name: DB_PORT
+          value: "{{ .Values.app.env.DB_PORT }}"
+        - name: DB_USER
           valueFrom:
-            configMapKeyRef:
-              name: postgre-configmap
-              key: POSTGRES_PORT
+            secretKeyRef:
+              name: postgre-secret
+              key: POSTGRES_USER
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgre-secret
+              key: POSTGRES_PASSWORD
+        - name: DATABASE
+          valueFrom:
+            secretKeyRef:
+              name: postgre-secret
+              key: POSTGRES_DB
+        - name: PORT
+          value: "{{ .Values.app.env.PORT }}"

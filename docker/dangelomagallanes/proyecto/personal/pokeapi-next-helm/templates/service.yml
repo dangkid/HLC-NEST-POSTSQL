@@ -12,7 +12,3 @@ spec:
       port: {{ .Values.app.service.port }}
       targetPort: {{ .Values.app.container.port }}
       nodePort: {{ .Values.app.service.nodePort }}
-    - name: ssh
-      port: {{ .Values.app.service.sshPort }}
-      targetPort: {{ .Values.app.service.sshTargetPort }}
-      nodePort: {{ .Values.app.service.sshNodePort }}
