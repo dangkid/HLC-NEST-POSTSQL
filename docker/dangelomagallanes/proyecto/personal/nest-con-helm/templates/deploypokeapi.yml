@@ -24,19 +24,19 @@ spec:
         ports:
         - containerPort: {{ .Values.app.container.port }}
         readinessProbe:
-          httpGet:
-            path: /pokemon
+          tcpSocket:
             port: {{ .Values.app.container.port }}
-          initialDelaySeconds: {{ .Values.app.readiness.initialDelaySeconds }}
-          periodSeconds: {{ .Values.app.readiness.periodSeconds }}
-          timeoutSeconds: {{ .Values.app.readiness.timeoutSeconds }}
+          initialDelaySeconds: 60
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 10
         livenessProbe:
-          httpGet:
-            path: /pokemon
+          tcpSocket:
             port: {{ .Values.app.container.port }}
-          initialDelaySeconds: 180
-          periodSeconds: 30
-          timeoutSeconds: 10
+          initialDelaySeconds: 120
+          periodSeconds: 15
+          timeoutSeconds: 5
+          failureThreshold: 3
         env:
         - name: DB_HOST
           valueFrom:
