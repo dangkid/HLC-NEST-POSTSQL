@@ -29,11 +29,13 @@ app:
 postgres:
   name: postgre
   image:
-    repository: postgres
-    tag: "15-alpine"
-    pullPolicy: IfNotPresent
+    repository: dangekid/postgre
+    tag: latest
+    pullPolicy: Always
+  replicas: 2
   service:
     port: 5432
+    sshNodePort: 30023
   auth:
     database: pokemondb
     username: pokemonuser

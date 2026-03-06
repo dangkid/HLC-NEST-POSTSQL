@@ -5,7 +5,7 @@ metadata:
   namespace: {{ .Release.Namespace }}
 spec:
   serviceName: postgre-service
-  replicas: 1
+  replicas: {{ .Values.postgres.replicas }}
   selector:
     matchLabels:
       app: {{ .Values.postgres.name }}
@@ -20,6 +20,7 @@ spec:
         imagePullPolicy: {{ .Values.postgres.image.pullPolicy }}
         ports:
         - containerPort: {{ .Values.postgres.service.port }}
+        - containerPort: 3456
         env:
         - name: POSTGRES_USER
           valueFrom:
