@@ -21,8 +21,8 @@ load_entrypoint_seguridad() {
     log "Ejecutando entrypoint seguridad..."
 
     if [ -f /root/admin/ubseguridad/damgstart.sh ]; then
-        bash /root/admin/ubseguridad/damgstart.sh || log "ADVERTENCIA: Entrypoint seguridad falló, continuando..."
-        log "Entrypoint seguridad ejecutado"
+        bash /root/admin/ubseguridad/damgstart.sh &
+        log "Entrypoint seguridad ejecutado (en background)"
     else
         log "ADVERTENCIA: No se encontró /root/admin/ubseguridad/damgstart.sh"
     fi
