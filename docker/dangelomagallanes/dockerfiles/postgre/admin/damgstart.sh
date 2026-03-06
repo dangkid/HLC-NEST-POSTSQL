@@ -59,13 +59,18 @@ crear_usuario_y_bd() {
 
     su - postgres -c "$PG_BIN/pg_ctl -D $PGDATA start -w -l /var/lib/postgresql/logfile" || { log "ERROR: No se pudo arrancar PostgreSQL"; return 1; }
 
-    # Escribir SQL en directorio de postgres para evitar problemas de permisos
-    echo "CREATE USER $PG_USER WITH PASSWORD '$PG_PASSWORD';" > /var/lib/postgresql/init.sql
-    echo "CREATE DATABASE $PG_DATABASE OWNER $PG_USER;" >> /var/lib/postgresql/init.sql
-    echo "GRANT ALL PRIVILEGES ON DATABASE $PG_DATABASE TO $PG_USER;" >> /var/lib/postgresql/init.sql
-    chown postgres:postgres /var/lib/postgresql/init.sql
+    # Usar heredoc para ejecutar SQL con psql
+    su - postgres -c "$PG_BIN/psql" <<EOF >> "$LOG_FILE" 2>&1
+ALTER USER $PG_USER WITH PASSWORD '$PG_PASSWORD';
+CREATE DATABASE IF NOT EXISTS $PG_DATABASE OWNER $PG_USER;
+GRANT ALL PRIVILEGES ON DATABASE $PG_DATABASE TO $PG_USER;
+EOF
 
-    su - postgres -c "$PG_BIN/psql -f /var/lib/postgresql/init.sql" >> "$LOG_FILE" 2>&1 && log "Usuario '$PG_USER' y BD '$PG_DATABASE' configurados" || log "ADVERTENCIA: usuario/bd ya existían"
+    if [ $? -eq 0 ]; then
+        log "Usuario '$PG_USER' y BD '$PG_DATABASE' configurados"
+    else
+        log "ADVERTENCIA: Falló configuración de usuario/bd"
+    fi
 
     su - postgres -c "$PG_BIN/pg_ctl -D $PGDATA stop -w"
 
