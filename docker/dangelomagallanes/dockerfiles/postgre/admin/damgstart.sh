@@ -59,12 +59,14 @@ crear_usuario_y_bd() {
 
     su - postgres -c "$PG_BIN/pg_ctl -D $PGDATA start -w -l /var/lib/postgresql/logfile" || { log "ERROR: No se pudo arrancar PostgreSQL"; return 1; }
 
-    su - postgres -c "psql -c \"DO \\\$\\\$ BEGIN IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname='$PG_USER') THEN CREATE USER $PG_USER WITH PASSWORD '$PG_PASSWORD'; ELSE ALTER USER $PG_USER WITH PASSWORD '$PG_PASSWORD'; END IF; END \\\$\\\$;\"" || log "ADVERTENCIA: Falló crear/actualizar usuario"
-    log "Usuario '$PG_USER' creado/actualizado"
+    # Crear usuario si no existe, luego asignar password
+    su - postgres -c "psql -tc \"SELECT 1 FROM pg_roles WHERE rolname='$PG_USER'\" | grep -q 1 || psql -c \"CREATE USER $PG_USER WITH PASSWORD '$PG_PASSWORD';\"" || log "ADVERTENCIA: Falló crear usuario"
+    su - postgres -c "psql -c \"ALTER USER $PG_USER WITH PASSWORD '$PG_PASSWORD';\"" || log "ADVERTENCIA: Falló alter user"
+    log "Usuario '$PG_USER' listo"
 
-    su - postgres -c "psql -tc \"SELECT 1 FROM pg_database WHERE datname='$PG_DATABASE'\"" | grep -q 1 || \
-    su - postgres -c "psql -c \"CREATE DATABASE $PG_DATABASE OWNER $PG_USER;\"" || log "ADVERTENCIA: Falló crear BD"
-    log "Base de datos '$PG_DATABASE' creada/verificada"
+    # Crear base de datos si no existe
+    su - postgres -c "psql -tc \"SELECT 1 FROM pg_database WHERE datname='$PG_DATABASE'\" | grep -q 1 || psql -c \"CREATE DATABASE $PG_DATABASE OWNER $PG_USER;\"" || log "ADVERTENCIA: Falló crear BD"
+    log "Base de datos '$PG_DATABASE' lista"
 
     su - postgres -c "psql -c \"GRANT ALL PRIVILEGES ON DATABASE $PG_DATABASE TO $PG_USER;\"" || log "ADVERTENCIA: Falló grant"
     log "Privilegios otorgados a '$PG_USER' sobre '$PG_DATABASE'"
