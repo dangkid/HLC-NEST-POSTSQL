@@ -16,7 +16,7 @@ app:
     nodePort: 30087
   ingress:
     enabled: true
-    host: pokeapi.dangelomagallanes.me
+    host: pokemon.dangelomagallanes.me
     port: 80
   readiness:
     initialDelaySeconds: 120
