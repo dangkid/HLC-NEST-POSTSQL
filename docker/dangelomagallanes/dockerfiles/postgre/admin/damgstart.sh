@@ -59,15 +59,13 @@ crear_usuario_y_bd() {
 
     su - postgres -c "$PG_BIN/pg_ctl -D $PGDATA start -w -l /var/lib/postgresql/logfile" || { log "ERROR: No se pudo arrancar PostgreSQL"; return 1; }
 
-    # Escribir SQL a fichero temporal para evitar problemas de quoting
-    cat > /tmp/init_db.sql << SQLEOF
-CREATE USER $PG_USER WITH PASSWORD '$PG_PASSWORD';
-CREATE DATABASE $PG_DATABASE OWNER $PG_USER;
-GRANT ALL PRIVILEGES ON DATABASE $PG_DATABASE TO $PG_USER;
-SQLEOF
+    # Escribir SQL en directorio de postgres para evitar problemas de permisos
+    echo "CREATE USER $PG_USER WITH PASSWORD '$PG_PASSWORD';" > /var/lib/postgresql/init.sql
+    echo "CREATE DATABASE $PG_DATABASE OWNER $PG_USER;" >> /var/lib/postgresql/init.sql
+    echo "GRANT ALL PRIVILEGES ON DATABASE $PG_DATABASE TO $PG_USER;" >> /var/lib/postgresql/init.sql
+    chown postgres:postgres /var/lib/postgresql/init.sql
 
-    su - postgres -c "psql -f /tmp/init_db.sql" >> "$LOG_FILE" 2>&1 || log "ADVERTENCIA: Algunos comandos ya existían"
-    log "Usuario '$PG_USER' y BD '$PG_DATABASE' configurados"
+    su - postgres -c "$PG_BIN/psql -f /var/lib/postgresql/init.sql" >> "$LOG_FILE" 2>&1 && log "Usuario '$PG_USER' y BD '$PG_DATABASE' configurados" || log "ADVERTENCIA: usuario/bd ya existían"
 
     su - postgres -c "$PG_BIN/pg_ctl -D $PGDATA stop -w"
 
