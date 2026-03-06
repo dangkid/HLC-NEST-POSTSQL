@@ -20,7 +20,7 @@ app:
     port: 3001
   env:
     DB_PORT: "5432"
-    PORT: "3001"
+    PORT: "3050"
   readiness:
     initialDelaySeconds: 120
     periodSeconds: 10

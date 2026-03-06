@@ -1,0 +1,16 @@
+# Docker Compose - Capa 6: pokeapinext (Next.js + Node 20)
+# Aplicación Next.js con Node.js 20
+# FROM dangekid/nginx1
+# Nota: Esta capa prepara la app. La capa final (nginxpokeapi_next) compila y sirve.
+services:
+  pokeapinext:
+    image: dangekid/pokeapinext
+    build:
+      context: ../../
+      dockerfile: dockerfiles/node_next/dockerfiles
+    container_name: ctdamg_pokeapinext
+    ports:
+      - "80:80"      # Nginx
+      - "3456:3456"  # SSH
+    stdin_open: true
+    tty: true

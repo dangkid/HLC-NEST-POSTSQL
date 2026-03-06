@@ -1,3 +1,7 @@
+# Docker Compose - Capa 7: nginxpokeapi (FINAL NestJS)
+# NestJS con Nginx proxy → puerto 3001 → NestJS en 3050
+# FROM dangekid/pokeapi
+# Incluye PostgreSQL para ser totalmente funcional
 services:
   postgres:
     image: postgres:15-alpine
@@ -7,56 +11,37 @@ services:
       POSTGRES_PASSWORD: pokemonpass123
       POSTGRES_DB: pokemondb
     ports:
-      - 5433:5432
+      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    networks:
-      pokemon_network:
-        ipv4_address: 192.168.25.2
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U pokemonuser -d pokemondb"]
       interval: 10s
       timeout: 5s
       retries: 5
 
-  api:
+  nginxpokeapi:
     image: dangekid/nginxpokeapi
-    container_name: ctdamgnginxpokeapi
+    build:
+      context: ../../
+      dockerfile: dockerfiles/nginxpokeapi/damgnginxpokeapi
+    container_name: ctdamg_nginxpokeapi
     ports:
-      - 3010:3001
+      - "3001:3001"  # Nginx proxy → NestJS
+      - "3456:3456"  # SSH
     environment:
       DB_HOST: postgres
-      DB_PORT: 5432
+      DB_PORT: "5432"
       DB_USER: pokemonuser
       DB_PASSWORD: pokemonpass123
       DATABASE: pokemondb
-      PORT: 3050
-    volumes:
-      - ./logs/api:/root/logs
-    networks:
-      pokemon_network:
-        ipv4_address: 192.168.25.3
+      PORT: "3050"
+      CONTENEDOR: ctdamg_nginxpokeapi
     depends_on:
       postgres:
         condition: service_healthy
-
-  frontend:
-    image: dangekid/pokeapi_next_finalizado
-    container_name: pokeapi_next_finalizado
-    ports:
-      - 8080:80
-    volumes:
-      - ./logs/frontend:/root/logs
-    networks:
-      pokemon_network:
-        ipv4_address: 192.168.25.4
+    stdin_open: true
+    tty: true
 
 volumes:
   postgres_data:
-
-networks:
-  pokemon_network:
-    driver: bridge
-    ipam:
-      config:
-        - subnet: 192.168.25.0/24

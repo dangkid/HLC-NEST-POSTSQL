@@ -1,0 +1,25 @@
+# Docker Compose - Capa 5: pokeapi (NestJS + Node 22)
+# Aplicación NestJS con Node.js 22
+# FROM dangekid/nginx1
+# Nota: Esta capa instala dependencias y prepara el proyecto.
+# Para ejecutar con PostgreSQL, usar la capa final (nginxpokeapi).
+services:
+  pokeapi:
+    image: dangekid/pokeapi
+    build:
+      context: ../../
+      dockerfile: dockerfiles/nest/damgpokeapi
+    container_name: ctdamg_pokeapi
+    ports:
+      - "3001:3001"  # NestJS
+      - "80:80"      # Nginx
+      - "3456:3456"  # SSH
+    environment:
+      DB_HOST: localhost
+      DB_PORT: "5432"
+      DB_USER: pokemonuser
+      DB_PASSWORD: pokemonpass123
+      DATABASE: pokemondb
+      PORT: "3001"
+    stdin_open: true
+    tty: true

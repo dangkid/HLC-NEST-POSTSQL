@@ -1,0 +1,14 @@
+# Docker Compose - Capa 2: ubseguridad
+# Seguridad con auditoría de puertos
+# FROM dangekid/ubbase
+services:
+  ubseguridad:
+    image: dangekid/ubseguridad
+    build:
+      context: ../../
+      dockerfile: dockerfiles/ubseguridad/damgubseguridad
+    container_name: ctdamg_ubseguridad
+    ports:
+      - "3456:3456"  # SSH
+    stdin_open: true
+    tty: true

@@ -1,0 +1,22 @@
+# Docker Compose - Capa 4: postgre
+# PostgreSQL con usuario pokemonuser y base pokemondb
+# FROM dangekid/ubseguridad
+services:
+  postgre:
+    image: dangekid/postgre
+    build:
+      context: ../../
+      dockerfile: dockerfiles/postgre/damgpostgre
+    container_name: ctdamg_postgre
+    ports:
+      - "5432:5432"  # PostgreSQL
+      - "3456:3456"  # SSH
+    environment:
+      CONTENEDOR: ctdamg_postgre
+    volumes:
+      - postgre_data:/var/lib/postgresql/data
+    stdin_open: true
+    tty: true
+
+volumes:
+  postgre_data:

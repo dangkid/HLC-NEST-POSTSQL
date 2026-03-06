@@ -1,0 +1,14 @@
+# Docker Compose - Capa 1: ubbase
+# Base Ubuntu con SSH, curl, nano, net-tools, usuario dangelo
+# FROM ubuntu
+services:
+  ubbase:
+    image: dangekid/ubbase
+    build:
+      context: ../../
+      dockerfile: dockerfiles/ubbase/damgubbase
+    container_name: ctdamg_ubbase
+    ports:
+      - "3456:3456"  # SSH
+    stdin_open: true
+    tty: true

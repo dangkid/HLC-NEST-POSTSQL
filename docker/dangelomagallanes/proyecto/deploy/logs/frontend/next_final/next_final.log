@@ -1,0 +1,33 @@
+[Fri Mar  6 09:10:16 UTC 2026] ===== Iniciando contenedor Next.js (static export) + Nginx =====
+[Fri Mar  6 09:10:16 UTC 2026] Preparando Next.js en /root/admin/node_next/next-pokeapi
+[Fri Mar  6 09:10:16 UTC 2026] Instalando dependencias...
+
+added 21 packages, and audited 22 packages in 37s
+
+3 packages are looking for funding
+  run `npm fund` for details
+
+1 high severity vulnerability
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+npm notice
+npm notice New major version of npm available! 10.8.2 -> 11.11.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.11.0
+npm notice To update run: npm install -g npm@11.11.0
+npm notice
+[Fri Mar  6 09:10:54 UTC 2026] Compilando Next.js (static export)...
+
+> pokemon-next@1.0.0 build
+> next build
+
+Attention: Next.js now collects completely anonymous telemetry regarding usage.
+This information is used to shape Next.js' roadmap and prioritize features.
+You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+https://nextjs.org/telemetry
+
+  ▲ Next.js 14.2.35
+
+   Creating an optimized production build ...

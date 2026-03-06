@@ -1,0 +1,15 @@
+# Docker Compose - Capa 3: nginx1
+# Servidor web Nginx
+# FROM dangekid/ubseguridad
+services:
+  nginx1:
+    image: dangekid/nginx1
+    build:
+      context: ../../../
+      dockerfile: dockerfiles/sweb/nginx/damgnginx
+    container_name: ctdamg_nginx1
+    ports:
+      - "8080:80"    # Nginx
+      - "3456:3456"  # SSH
+    stdin_open: true
+    tty: true

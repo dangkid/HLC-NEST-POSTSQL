@@ -1,0 +1,17 @@
+# Docker Compose - Capa 8: pokeapi_next_finalizado (FINAL Next.js)
+# Next.js static export servido por Nginx en puerto 80
+# FROM dangekid/pokeapinext
+services:
+  pokeapi_next_finalizado:
+    image: dangekid/pokeapi_next_finalizado
+    build:
+      context: ../../
+      dockerfile: dockerfiles/nginxpokeapi_next/dockerfiles
+    container_name: ctdamg_pokeapi_next_finalizado
+    ports:
+      - "8080:80"    # Nginx sirviendo archivos estáticos
+      - "3456:3456"  # SSH
+    environment:
+      CONTENEDOR: ctdamg_pokeapi_next_finalizado
+    stdin_open: true
+    tty: true
