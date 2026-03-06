@@ -3,9 +3,9 @@
 LOG_DIR="/root/logs"
 LOG_FILE="$LOG_DIR/informe_postgre.log"
 
-PG_USER="pokemonuser"
-PG_PASSWORD="pokemonpass123"
-PG_DATABASE="pokemondb"
+PG_USER="${POSTGRES_USER:-pokemonuser}"
+PG_PASSWORD="${POSTGRES_PASSWORD:-pokemonpass123}"
+PG_DATABASE="${POSTGRES_DB:-pokemondb}"
 PG_PORT="5432"
 
 PG_VERSION=$(ls /usr/lib/postgresql/ | sort -V | tail -1)
