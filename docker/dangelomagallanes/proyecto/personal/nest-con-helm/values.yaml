@@ -29,9 +29,9 @@ app:
 postgres:
   name: postgre
   image:
-    repository: dangekid/postgre
-    tag: latest
-    pullPolicy: Always
+    repository: postgres
+    tag: "15-alpine"
+    pullPolicy: IfNotPresent
   replicas: 2
   service:
     port: 5432
