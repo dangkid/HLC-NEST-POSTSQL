@@ -37,9 +37,9 @@ postgres:
     port: 5432
     sshNodePort: 30023
   auth:
-    database: pokemondb
-    username: pokemonuser
-    password: pokemonpass123
+    database: nestasir
+    username: postgres
+    password: usuario
   persistence:
     enabled: true
     size: 1Gi
