@@ -31,6 +31,9 @@ load_entrypoint_seguridad() {
 inicializar_cluster() {
     if [ ! -f "$PGDATA/PG_VERSION" ]; then
         log "Inicializando cluster PostgreSQL (v$PG_VERSION)..."
+        mkdir -p "$PGDATA"
+        chown -R postgres:postgres /var/lib/postgresql/data
+        chmod 700 "$PGDATA"
         su - postgres -c "$PG_BIN/initdb -D $PGDATA" || { log "ERROR: Falló initdb"; return 1; }
         log "Cluster inicializado"
     else
